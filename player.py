@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.hitbox_rect.copy()
         self.shoot = False
 
-        self.player_data = {'score': 0, 'get_hurt_count': 0, 'health_amount': 3, 'shoot_cooldown': 0,
+        self.player_data = {'score': 0, 'record': 0, 'get_hurt_count': 0, 'health_amount': 3, 'shoot_cooldown': 0,
                             'speedx': 6, 'speedy': 6, 'enemy_killed': 0, 'wave': 1}
 
         self.invincible = 0
@@ -87,6 +87,11 @@ class Player(pygame.sprite.Sprite):
     def player_hurt(self):
         background.texture.blit(self.image_blood, self.rect)
         self.player_data['get_hurt_count'] += 1
+
+    def player_reset(self):
+        self.player_data = {'score': 0, 'record': 0, 'get_hurt_count': 0, 'health_amount': 3, 'shoot_cooldown': 0,
+                            'speedx': 6, 'speedy': 6, 'enemy_killed': 0, 'wave': 1}
+        self.pos = pygame.math.Vector2(player_start_x, player_start_y)
 
     def update(self):
         self.check_bullet_collision()

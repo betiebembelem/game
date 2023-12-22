@@ -36,10 +36,10 @@ class Background:
 
     # добавление в фон второстепенных изображений(камни, кусты...)
     def texture_fill_secondary(self, path, amount, size=1.0):
-        self.image = pygame.transform.rotozoom(pygame.image.load(path).convert_alpha(), 0, size)
+        image = pygame.transform.rotozoom(pygame.image.load(path).convert_alpha(), 0, size)
 
         for _ in range(amount):
-            self.texture.blit(self.image, (randint(0, self.screen_width), randint(0, self.screen_height)))
+            self.texture.blit(image, (randint(0, self.screen_width), randint(0, self.screen_height)))
 
     # добавление в группу all_sprites_group "активных" спрайтов (обновляются в зависимости от их координаты y)
     def sprite_active(self, path, amount):
@@ -47,7 +47,7 @@ class Background:
             ActiveSpriteStatic((randint(60, self.screen_width - 60), randint(60, self.screen_height - 60)),
                                all_sprites_group, path)
 
-    def draw(self, screen):
+    def draw(self):
         screen.blit(self.texture, (0, 0))
 
     def get_texture_desert(self):

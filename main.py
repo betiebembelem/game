@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 all_sprites_group.add(player)
 
 text_color = (255, 0, 0)
-image_end = pygame.image.load('sprites/backgrounds/gameover.jpg')
+image_end = pygame.image.load('sprites/backgrounds/gameover.png')
 image_start = pygame.image.load('sprites/backgrounds/back.png')
 
 
@@ -33,7 +33,7 @@ def enemy_spawn(spawn_speed, wave, call_count):
     elif wave == 2:
         spawn_speed += 2
     elif wave == 3:
-        spawn_speed += 20
+        spawn_speed += 15
     if spawn_speed > 200:
         randomx, randomy = random_pos()
         if enemy_outside_camera(randomx, randomy):
@@ -46,7 +46,23 @@ def enemy_spawn(spawn_speed, wave, call_count):
     return spawn_speed
 
 
+def display_text(text, resize, x, y):
+    font_recreated = pygame.font.Font("font/PublicPixel.ttf", resize)
+    text_surface = font_recreated.render(text, True, text_color)
+    text_rect = text_surface.get_rect()
+    text_rect.center = (x, y)
+    screen.blit(text_surface, text_rect)
+
+
+def reset_all():
+    background.get_texture_desert()
+    player.player_reset()
+    enemy_reset()
+    bullet_reset()
+
+
 def game():
+    reset_all()
     call_count = 1
     spawn_speed = 40
 
@@ -90,8 +106,10 @@ def game_start():
                     exit()
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed() == (1, 0, 0) and 440 <= mouse_x <= 840 and 280 <= mouse_y <= 360:
+        if pygame.mouse.get_pressed()[0] == 1 and 440 <= mouse_x <= 820 and 280 <= mouse_y <= 420:
             return "game"
+        elif pygame.mouse.get_pressed()[0] == 1 and 480 <= mouse_x <= 820 and 455 <= mouse_y <= 600:
+            exit()
 
         screen.blit(image_start, (0, 0))
         pygame.display.update()
@@ -99,7 +117,6 @@ def game_start():
 
 
 def game_end():
-    text_surface = font.render(str(player.player_data['score']), True, text_color)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -109,8 +126,18 @@ def game_end():
                 if event.key == pygame.K_ESCAPE:
                     exit()
 
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if pygame.mouse.get_pressed()[0] == 1 and 330 <= mouse_x <= 640 and 600 <= mouse_y <= 690:
+            player.player_reset()
+            return "game"
+        elif pygame.mouse.get_pressed()[0] == 1 and 720 <= mouse_x <= 990 and 580 <= mouse_y <= 700:
+            player.player_reset()
+            return "game_start"
+
         screen.blit(image_end, (0, 0))
-        screen.blit(text_surface, (0, 0))
+        display_text(str(player.player_data['score']), 32, 580, 305)
+        display_text(str(player.player_data['enemy_killed']), 32, 580, 425)
+        display_text(str(player.player_data['record']), 32, 580, 525)
         pygame.display.update()
         clock.tick(FPS)
 

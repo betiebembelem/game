@@ -3,8 +3,8 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 
-player_start_x = WIDTH * 3 // 2
-player_start_y = HEIGHT * 3 // 2
+player_start_x = WIDTH
+player_start_y = HEIGHT
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)

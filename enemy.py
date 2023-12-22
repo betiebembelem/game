@@ -13,9 +13,24 @@ enemy_group = pygame.sprite.Group()
 loot_group = pygame.sprite.Group()
 
 
-class Enemy(pygame.sprite.Sprite):
-    killed = 0
+def enemy_reset():
+    for sprite in enemy_group:
+        sprite.kill()
 
+
+def loot_reset():
+    for sprite in loot_group:
+        sprite.kill()
+
+
+def bullet_reset():
+    for sprite in bullet_group:
+        sprite.kill()
+    for sprite in enemy_bullet_group:
+        sprite.kill()
+
+
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__(enemy_group, all_sprites_group)
         # Для анимации
