@@ -2,6 +2,18 @@ from bullet import *
 from background import *
 
 
+def get_record(command, new_record=0):
+    file_path = 'record.txt'
+
+    if command == 'write':
+        with open(file_path, 'w') as file:
+            file.write(f'record = {new_record}\n')
+    elif command == 'read':
+        with open(file_path, 'r') as file:
+            record = file.readline()
+            return int(record.split('=')[1].strip())
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()

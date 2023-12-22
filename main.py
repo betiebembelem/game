@@ -117,6 +117,12 @@ def game_start():
 
 
 def game_end():
+    score = player.player_data['score']
+    player.player_data['record'] = get_record('read')
+    if score > player.player_data['record']:
+        get_record('write', score)
+        player.player_data['record'] = score
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
