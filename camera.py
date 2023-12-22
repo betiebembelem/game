@@ -9,7 +9,7 @@ class Camera(pygame.sprite.Group):
         # Получаем прямоугольник пола из текстуры фона
         self.floor_rect = background.texture.get_rect(topleft=(0, 0))
 
-    def custom_draw(self, player):
+    def custom_draw(self):
         # Вычисление положения камеры с учетом того, что игрок должен находиться посередине экрана
         self.offset.x = player.rect.centerx - (WIDTH // 2)
         self.offset.y = player.rect.centery - (HEIGHT // 2)
@@ -19,7 +19,7 @@ class Camera(pygame.sprite.Group):
         screen.blit(background.texture, floor_offset_pos)
 
         # Отрисовка всех спрайтов в all_sprites_group с учетом их положения по нижнему краю y
-        for sprite in sorted(all_sprites_group, key=lambda sprite: sprite.rect.bottom):
+        for sprite in sorted(all_sprites_group, key=lambda sp: sp.rect.bottom):
             # Вычисление их смещения относительно положения камеры
             offset_pos = sprite.rect.topleft - self.offset
 

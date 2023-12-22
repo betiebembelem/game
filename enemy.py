@@ -108,7 +108,7 @@ class Enemy(pygame.sprite.Sprite):
         else:
             col = game_settings['RED']
         width = int(self.rect.width * self.health / 100)
-        pygame.draw.rect(screen, col, (self.rect.x - camera.offset.x ,
+        pygame.draw.rect(screen, col, (self.rect.x - camera.offset.x,
                                        self.rect.y - camera.offset.y + self.rect.height, width, 3))
 
     def animation(self, type, walk_speed=0., attack_speed=0.):
@@ -128,15 +128,15 @@ class Enemy(pygame.sprite.Sprite):
             self.image = self.animation_sprites[int(self.count_frames)]
 
     def sheet_animation(self):
-        self.sprite_sheet = pygame.image.load('sprites/enemy/goblin_run.png').convert_alpha()
-        self.sprite_sheet_attack = pygame.image.load('sprites/enemy/goblin_attack.png').convert_alpha()
+        sprite_sheet = pygame.image.load('sprites/enemy/goblin_run.png').convert_alpha()
+        sprite_sheet_attack = pygame.image.load('sprites/enemy/goblin_attack.png').convert_alpha()
         for i in range(8):
             sprite_rect = pygame.Rect((i + self.animation_offset) % 8 * 35, 0, 35, 40)
-            sprite_image = self.sprite_sheet.subsurface(sprite_rect)
+            sprite_image = sprite_sheet.subsurface(sprite_rect)
             self.images.append(pygame.transform.rotozoom(sprite_image.convert_alpha(), 0, 1))
         for i in range(8):
             sprite_rect = pygame.Rect(i * 88, 0, 88, 46)
-            sprite_image_attack = self.sprite_sheet_attack.subsurface(sprite_rect)
+            sprite_image_attack = sprite_sheet_attack.subsurface(sprite_rect)
             self.images_attack.append(pygame.transform.rotozoom(sprite_image_attack.convert_alpha(), 0, 1))
 
     def get_vector_distance(self, vector_1, vector_2):
@@ -158,10 +158,10 @@ class Mage(Enemy):
         self.rareness = 1
         self.images = []
         self.images_attack = []
-        self.mage_sheet_animation()
+        self.sheet_animation()
         self.image = self.images[0]
 
-    def mage_hunt_player(self):
+    def hunt_player(self):
         if self.is_attacking == 0:
             player_vector = pygame.math.Vector2(player.hitbox_rect.center)
             enemy_vector = pygame.math.Vector2(self.rect.center)
@@ -172,7 +172,7 @@ class Mage(Enemy):
             else:
                 super().hunt_player()
 
-    def mage_sheet_animation(self):
+    def sheet_animation(self):
         sprite_sheet = pygame.image.load('sprites/enemy/mage_run.png').convert_alpha()
         sprite_sheet_attack = pygame.image.load('sprites/enemy/mage_attack.png').convert_alpha()
         for i in range(8):
@@ -191,15 +191,6 @@ class Mage(Enemy):
         bullet = Bullet(self.position.x, self.position.y, angle, 'enemy')
         enemy_bullet_group.add(bullet)
         all_sprites_group.add(bullet)
-
-    def update(self):
-        self.check_collision()
-        self.mage_hunt_player()
-        if self.is_attacking:
-            self.animation(attack_speed=0.1, type='attack')
-        else:
-            self.animation('walk')
-        self.draw_enemy_health()
 
 
 class Skeleton(Enemy):

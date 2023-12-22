@@ -94,7 +94,7 @@ def game():
             return 'game_end'
 
         screen.fill((0, 0, 0))
-        camera.custom_draw(player)
+        camera.custom_draw()
         spawn_speed = enemy_spawn(spawn_speed, player.player_data['wave'], call_count)
         call_count += 1
         all_sprites_group.update()
@@ -131,6 +131,11 @@ def game_start():
 
 def game_end():
     win_flag = player.player_data['wave'] == 4
+    if win_flag:
+        image = image_win
+    else:
+        image = image_end
+
     score = player.player_data['score']
     player.player_data['record'] = get_record('read')
     if score > player.player_data['record']:
@@ -154,10 +159,7 @@ def game_end():
             player.player_reset()
             return "game_start"
 
-        if win_flag:
-            screen.blit(image_end, (0, 0))
-        else:
-            screen.blit(image_win, (0, 0))
+        screen.blit(image, (0, 0))
         display_text(str(player.player_data['score']), 32, 580, 305)
         display_text(str(player.player_data['enemy_killed']), 32, 580, 425)
         display_text(str(player.player_data['record']), 32, 580, 525)
