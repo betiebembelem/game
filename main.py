@@ -8,14 +8,17 @@ from random import randint
 from HUD import *
 
 pygame.init()
-pygame.display.set_caption('Игра Года')
+pygame.display.set_caption('Just Shoot')
 clock = pygame.time.Clock()
 
 all_sprites_group.add(player)
 
 text_color = (255, 0, 0)
 image_end = pygame.image.load('sprites/backgrounds/gameover.png')
-image_start = pygame.image.load('sprites/backgrounds/back.png')
+image_win = pygame.image.load('sprites/backgrounds/win_background.png')
+image_start = pygame.image.load('sprites/backgrounds/Just_shoot_start.png')
+image_start_button = pygame.image.load('sprites/backgrounds/start_button.png')
+image_quit_button = pygame.image.load('sprites/backgrounds/quit_button.png')
 
 
 def enemy_outside_camera(randomx, randomy):
@@ -43,6 +46,10 @@ def enemy_spawn(spawn_speed, wave, call_count):
         randomx, randomy = random_pos()
         if enemy_outside_camera(randomx, randomy):
             Mage((randomx, randomy))
+    if call_count % 200 == 0 and wave == 2:
+        randomx, randomy = random_pos()
+        if enemy_outside_camera(randomx, randomy):
+            Skeleton((randomx, randomy))
     return spawn_speed
 
 
@@ -59,6 +66,7 @@ def reset_all():
     player.player_reset()
     enemy_reset()
     bullet_reset()
+    loot_reset()
 
 
 def game():
@@ -78,7 +86,7 @@ def game():
         if player.player_data['get_hurt_count'] == player.player_data['health_amount']:
             return "game_end"
 
-        if call_count == 1000:
+        if call_count == 1500:
             player.player_data['wave'] += 1
             call_count = 0
 
@@ -105,18 +113,24 @@ def game_start():
                 if event.key == pygame.K_ESCAPE:
                     exit()
 
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed()[0] == 1 and 440 <= mouse_x <= 820 and 280 <= mouse_y <= 420:
-            return "game"
-        elif pygame.mouse.get_pressed()[0] == 1 and 480 <= mouse_x <= 820 and 455 <= mouse_y <= 600:
-            exit()
-
         screen.blit(image_start, (0, 0))
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if 440 <= mouse_x <= 820 and 280 <= mouse_y <= 420:
+            screen.blit(image_start_button, (449, 284))
+            if pygame.mouse.get_pressed()[0] == 1:
+                return "game"
+        elif 480 <= mouse_x <= 820 and 455 <= mouse_y <= 600:
+            screen.blit(image_quit_button, (465, 456))
+            if pygame.mouse.get_pressed()[0] == 1:
+                exit()
+
         pygame.display.update()
         clock.tick(FPS)
 
 
 def game_end():
+    win_flag = player.player_data['wave'] == 4
     score = player.player_data['score']
     player.player_data['record'] = get_record('read')
     if score > player.player_data['record']:
@@ -140,7 +154,10 @@ def game_end():
             player.player_reset()
             return "game_start"
 
-        screen.blit(image_end, (0, 0))
+        if win_flag:
+            screen.blit(image_end, (0, 0))
+        else:
+            screen.blit(image_win, (0, 0))
         display_text(str(player.player_data['score']), 32, 580, 305)
         display_text(str(player.player_data['enemy_killed']), 32, 580, 425)
         display_text(str(player.player_data['record']), 32, 580, 525)

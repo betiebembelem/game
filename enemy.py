@@ -55,7 +55,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.velocity = pygame.math.Vector2()
-        self.speed = ENEMY_SPEED
+        self.speed = game_settings['ENEMY_SPEED']
 
         self.position = pygame.math.Vector2(position)
 
@@ -82,12 +82,9 @@ class Enemy(pygame.sprite.Sprite):
                 if sprite.rect.colliderect(self.rect):
                     self.collide = True
                     sprite.kill()
-                    self.health -= PLAYER_DAMAGE
+                    self.health -= game_settings['PLAYER_DAMAGE']
                 if self.health <= 0:
-                    if self.rareness == 0:
-                        all_sprites_group.add(Loot(self.rect.x, self.rect.y, self.rareness))
-                    elif self.rareness == 1:
-                        all_sprites_group.add(Loot(self.rect.x, self.rect.y, self.rareness))
+                    all_sprites_group.add(Loot(self.rect.x, self.rect.y, self.rareness))
                     player.player_data['enemy_killed'] += 1
                     self.kill()
 
@@ -105,11 +102,11 @@ class Enemy(pygame.sprite.Sprite):
 
     def draw_enemy_health(self):
         if self.health > 60:
-            col = GREEN
+            col = game_settings['GREEN']
         elif self.health > 30:
-            col = YELLOW
+            col = game_settings['YELLOW']
         else:
-            col = RED
+            col = game_settings['RED']
         width = int(self.rect.width * self.health / 100)
         pygame.draw.rect(screen, col, (self.rect.x - camera.offset.x ,
                                        self.rect.y - camera.offset.y + self.rect.height, width, 3))
@@ -205,6 +202,30 @@ class Mage(Enemy):
         self.draw_enemy_health()
 
 
+class Skeleton(Enemy):
+    def __init__(self, position):
+        super().__init__(position)
+        self.rareness = 3
+        self.health = 125
+
+        self.images = []
+        self.images_attack = []
+        self.sheet_animation()
+        self.image = self.images[0]
+
+    def sheet_animation(self):
+        sprite_sheet = pygame.image.load('sprites/enemy/skeleton_walk.png').convert_alpha()
+        sprite_sheet_attack = pygame.image.load('sprites/enemy/skeleton_attack.png').convert_alpha()
+        for i in range(4):
+            sprite_rect = pygame.Rect((i + self.animation_offset) % 4 * 45, 0, 45, 51)
+            sprite_image = sprite_sheet.subsurface(sprite_rect)
+            self.images.append(pygame.transform.rotozoom(sprite_image.convert_alpha(), 0, 0.8))
+        for i in range(8):
+            sprite_rect = pygame.Rect(i * 150, 0, 150, 57)
+            sprite_image = sprite_sheet_attack.subsurface(sprite_rect)
+            self.images_attack.append(pygame.transform.rotozoom(sprite_image.convert_alpha(), 0, 0.8))
+
+
 class AnimatedText(pygame.sprite.Sprite):
     count = 0
 
@@ -230,12 +251,16 @@ class Loot(pygame.sprite.Sprite):
         path = ''
         if rareness == 0:
             path = 'sprites/loot/gem02blue.gif'
-            self.color = BLUE
+            self.color = game_settings['BLUE']
             self.points = 1
         elif rareness == 1:
             path = 'sprites/loot/gem03yellow.gif'
-            self.color = YELLOW
+            self.color = game_settings['YELLOW']
             self.points = 2
+        elif rareness == 3:
+            path = 'sprites/loot/gem05red.gif'
+            self.color = game_settings['RED']
+            self.points = 3
         self.image = pygame.image.load(path)
         self.rect = self.image.get_rect()
         self.rect.x = x

@@ -1,23 +1,16 @@
-# Game setup
-WIDTH = 1280
-HEIGHT = 720
-FPS = 60
+import csv
 
-player_start_x = WIDTH
-player_start_y = HEIGHT
+# Создаем словарь для хранения данных
+game_settings = {}
 
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+# Читаем данные из CSV файла
+with open('game_settings.csv', 'r') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        # Преобразуем значение в соответствующий тип данных (например, int, tuple)
+        key, value = row[0], eval(row[1])
+        game_settings[key] = value
 
-PLAYER_SIZE = 0.6
-
-SHOOT_COOLDOWN = 20
-BULLET_SPEED = 4
-BULLET_LIFETIME = 3000
-PLAYER_DAMAGE = 40
-
-ENEMY_SPEED = 2
+WIDTH = game_settings['WIDTH']
+HEIGHT = game_settings['HEIGHT']
+FPS = game_settings['FPS']

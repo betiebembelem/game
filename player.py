@@ -6,18 +6,18 @@ def get_record(command, new_record=0):
     file_path = 'record.txt'
 
     if command == 'write':
-        with open(file_path, 'w') as file:
-            file.write(f'record = {new_record}\n')
+        with open(file_path, 'w') as f:
+            f.write(f'record = {new_record}\n')
     elif command == 'read':
-        with open(file_path, 'r') as file:
-            record = file.readline()
+        with open(file_path, 'r') as f:
+            record = f.readline()
             return int(record.split('=')[1].strip())
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.pos = pygame.math.Vector2(player_start_x, player_start_y)
+        self.pos = pygame.math.Vector2(game_settings['player_start_x'], game_settings['player_start_y'])
         self.image = pygame.transform.rotozoom(pygame.image.load("sprites/player/wizard.png").convert_alpha(), 0, 0.5)
         self.base_image = self.image
         self.hitbox_rect = self.base_image.get_rect(center=self.pos)
@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 
     def is_shooting(self):
         if self.player_data['shoot_cooldown'] == 0:
-            self.player_data['shoot_cooldown'] = SHOOT_COOLDOWN
+            self.player_data['shoot_cooldown'] = game_settings['SHOOT_COOLDOWN']
             spawn_bullet_pos = self.pos
             bullet = Bullet(spawn_bullet_pos[0], spawn_bullet_pos[1], self.angle, 'player')
             bullet_group.add(bullet)
@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
     def player_reset(self):
         self.player_data = {'score': 0, 'record': 0, 'get_hurt_count': 0, 'health_amount': 3, 'shoot_cooldown': 0,
                             'speedx': 6, 'speedy': 6, 'enemy_killed': 0, 'wave': 1}
-        self.pos = pygame.math.Vector2(player_start_x, player_start_y)
+        self.pos = pygame.math.Vector2(game_settings['player_start_x'], game_settings['player_start_y'])
 
     def update(self):
         self.check_bullet_collision()

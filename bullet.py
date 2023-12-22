@@ -27,8 +27,8 @@ class Bullet(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.angle = angle
-        self.speed = BULLET_SPEED
-        self.bullet_lifetime = BULLET_LIFETIME
+        self.speed = game_settings['BULLET_SPEED']
+        self.bullet_lifetime = game_settings['BULLET_LIFETIME']
         self.count_frames = 0
         self.spawn_time = pygame.time.get_ticks()
         # вычисление x_vel и y_vel, характеризующих изменение положения пули по x и y

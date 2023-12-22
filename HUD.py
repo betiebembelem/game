@@ -17,9 +17,6 @@ class HUD(pygame.sprite.Sprite):
         self.health_empty_image = pygame.image.load('sprites/player/health_empty.png')
         self.health_rect = self.health_full_image.get_rect()
 
-        self.text_image_wave = ''
-        self.text_image_score = ''
-
     def health_draw(self):
         self.HUD_surface.blit(self.health_empty_image, (10, HEIGHT - self.health_rect.height - 50))
         repeat = 3 - player.player_data['get_hurt_count']
@@ -29,10 +26,10 @@ class HUD(pygame.sprite.Sprite):
             self.HUD_surface.blit(one_heart_image, (10 + i * 43, HEIGHT - self.health_rect.height - 50))
 
     def text_draw(self):
-        self.text_image_score = font.render('score:' + str(player.player_data['score']), True, WHITE)
-        self.text_image_wave = font.render('wave:' + str(player.player_data['wave']), True, WHITE)
-        self.HUD_surface.blit(self.text_image_score, (10, 30))
-        self.HUD_surface.blit(self.text_image_wave, (10, 60))
+        text_image_score = font.render('score:' + str(player.player_data['score']), True, game_settings['WHITE'])
+        text_image_wave = font.render('wave:' + str(player.player_data['wave']), True, game_settings['WHITE'])
+        self.HUD_surface.blit(text_image_score, (10, 30))
+        self.HUD_surface.blit(text_image_wave, (10, 60))
 
     def update(self):
         self.HUD_surface.fill((0, 0, 0, 0))
